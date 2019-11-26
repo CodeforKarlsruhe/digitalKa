@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="de_DE">
+<head>
+    <meta charset="UTF-8">
+    <title>InApp Demo OK Lab</title>
+
+    <link rel="stylesheet" type="text/css"
+          href="https://digital-ka.welocal.world/wp-content/themes/cmms-theme-digital_ka/assets/css-framework/framework-v1.css">
+</head>
+<body>
+<div class="content">
+    <h1 class="text-huge">OK Lab Demo App</h1>
+
+    <p class="color--grey04">Setze dein Content hier rein.</p>
+
+    <a class="button">Test #2 öffnen</a>
+
+
+</div>
+
+<script src="https://digital-ka.welocal.world/wp-content/themes/cmms-theme-digital_ka/assets/js-framework/framework-v1.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log('[app-demo] Ready');
+
+        // Listen to the "minimized" event
+        window.digital_ka.size.on(
+            'minimize',
+            () => {
+                // Do something, the app was minimized (closed)
+                console.log('[app-demo] I was minimized');
+            },
+        );
+
+        // Listen to the "maximized" event
+        window.digital_ka.size.on(
+            'maximize',
+            () => {
+                // Do something, the app was minimized (closed)
+                console.log('[app-demo] I was maximized');
+            },
+        );
+
+        // Listen to the "resized" event
+        window.digital_ka.size.on(
+            'resize',
+            state => {
+                // Do something, the app was resized.
+                // state has now the value "maximized" or "minimized"
+                console.log('[app-demo] I am now ' + state);
+            },
+        );
+
+        // Send a data payload to a different app
+        window.digital_ka.com.send(
+            'test-2', // Use the API name of the target app, see "API Kennung" in the App Store entry of the target app.
+            {
+                a: 1,
+                b: 2,
+                c: [3, 4]
+            }
+        );
+
+        // Listen for incoming data packages
+        window.digital_ka.com.on(
+            'message',
+            (payload, from) => {
+                // Do something, you received a data payload from another app
+                console.log('[app-demo] I received a payload from ' + from, payload);
+            }
+        );
+
+        // Add a click event listener on our button and open the app "Test #2" on click
+        const button = document.querySelectorAll('.button')[0];
+        button.addEventListener('click', () => {
+            // The button was clicked, send a request to open "Test #2"
+            window.digital_ka.com.send(
+                'app',
+                {
+                    app_id: 'test-2'
+                },
+                'open_app'
+            );
+            console.log('[app-demo] I sent a request to open test-2');
+        });
+    });
+</script>
+</body>
+</html>
+
